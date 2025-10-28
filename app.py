@@ -1,6 +1,6 @@
 import streamlit as st
 import numpy as np
-import matplotlib.pyplot as plt
+import matplotlib as plt
 import random, math
 from matplotlib.colors import hsv_to_rgb
 
