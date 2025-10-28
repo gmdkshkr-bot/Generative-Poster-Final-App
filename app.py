@@ -1,8 +1,7 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import random, math, os
+import random, math
 from matplotlib.colors import hsv_to_rgb
 
 # === Helpers ===
@@ -37,7 +36,7 @@ def rotate_coords(x, y, cx, cy, angle):
     y_rot = (x-cx)*np.sin(angle) + (y-cy)*np.cos(angle) + cy
     return x_rot, y_rot
 
-# --- Palette ---
+# --- Palette generator ---
 def make_palette(k=6, mode="pastel", base_h=0.6):
     cols=[]
     for _ in range(k):
