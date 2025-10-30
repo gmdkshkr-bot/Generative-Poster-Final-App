@@ -276,21 +276,11 @@ base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 # render
 
-palette = []
 
 
-if PALETTE_FILE is None:
-    st.warning("Please upload a CSV palette to continue.")
-    st.stop()
-
-df = pd.read_csv(PALETTE_FILE)
-
-# Find a hex-like column
-
-palette = df
 
 
-show_palette(palette)
+show_palette(palette_csv)
 
 
 #if st.sidebar.button("Generate Poster") or "auto_generate" not in st.session_state:
