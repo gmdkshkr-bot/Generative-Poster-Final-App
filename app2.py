@@ -279,7 +279,7 @@ base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 palette = []
 
 
-if palette_file is None:
+if PALETTE_FILE is None:
     st.warning("Please upload a CSV palette to continue.")
     st.stop()
 
