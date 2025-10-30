@@ -105,7 +105,7 @@ def make_palette(k=20, mode="pastel", base_h=0.60):
 
 # ------- Poster Drawer -------
 def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
-                sides, radius_min, radius_max, alpha_min, alpha_max,
+                sides, petals, radius_min, radius_max, alpha_min, alpha_max,
                 seed, base_h):
     random.seed(seed); np.random.seed(seed)
     fig, ax = plt.subplots(figsize=(7,10))
@@ -117,7 +117,7 @@ def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
     for _ in range(n_layers):
         cx, cy = random.random(), random.random()
         rr = random.uniform(radius_min, radius_max)
-        x, y = shape((cx,cy), r=rr, wobble=wobble, points=points, kind=blob_shape, sides=sides)
+        x, y = shape((cx,cy), r=rr, wobble=wobble, points=points, kind=blob_shape, sides=sides, petals=petals)
 
         color = random.choice(palette)
         alpha = random.uniform(alpha_min, alpha_max)
@@ -155,10 +155,10 @@ blob_shape = st.sidebar.selectbox("Shape",
 n_layers = st.sidebar.slider("Layers", 3, 20, 8)
 wobble = st.sidebar.slider("Wobble", 0.01, 9.0, 0.15)
 points = st.sidebar.slider("Points", 100, 1000, 200, 100)
-sides = st.sidebar.slider("Polygon Sides", 3, 10, 5)
-
-radius_min = st.sidebar.slider("Radius Min", 0.01, 0.2, 0.01)
-radius_max = st.sidebar.slider("Radius Max", 0.05, 0.3, 0.25)
+sides = st.sidebar.slider("Polygon Sides", 3, 10, 5, 1)
+petals = st.sidebar.slider("Flower Petals", 2, 20, 7, 1) 
+radius_min = st.sidebar.slider("Minimum Radius", 0.01, 0.2, 0.01)
+radius_max = st.sidebar.slider("Maximum Radius", 0.05, 0.3, 0.25)
 alpha_min = st.sidebar.slider("Alpha Min", 0.05, 0.5, 0.1)
 alpha_max = st.sidebar.slider("Alpha Max", 0.5, 1.0, 0.9)
 seed = st.sidebar.slider("Seed", 0, 9999, 0)
