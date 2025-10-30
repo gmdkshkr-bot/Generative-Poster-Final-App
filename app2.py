@@ -264,19 +264,21 @@ seed = st.sidebar.number_input("Seed (integer)", min_value=0, max_value=999999, 
 base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 # render
+'''
 if st.sidebar.button("Generate Poster") or "auto_generate" not in st.session_state:
     # ensure at least one run
     st.session_state["auto_generate"] = True
-    fig = draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
-                      sides, petals, radius_min, radius_max, alpha_min, alpha_max,
-                      int(seed), base_h, width=6, height=10)
-    st.pyplot(fig)
+    '''
+fig = draw_poster(palette_mode, blob_shape, n_layers, wobble, points, 
+                  sides, petals, radius_min, radius_max, alpha_min, alpha_max, 
+                  int(seed), base_h, width=6, height=10)
+st.pyplot(fig)
 
-    # download button
-    buf = io.BytesIO()
-    fig.savefig(buf, format="png", dpi=300, bbox_inches="tight")
-    buf.seek(0)
-    st.download_button("Download PNG (300dpi)", data=buf, file_name=f"poster_seed{seed}.png", mime="image/png")
+# download button
+buf = io.BytesIO()
+fig.savefig(buf, format="png", dpi=300, bbox_inches="tight")
+buf.seek(0)
+st.download_button("Download PNG (300dpi)", data=buf, file_name=f"poster_seed{seed}.png", mime="image/png")
 
 # show current palette table
 st.sidebar.header("Current CSV Palette")
