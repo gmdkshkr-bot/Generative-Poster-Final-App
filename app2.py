@@ -276,14 +276,6 @@ base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 # render
 
-
-
-#if st.sidebar.button("Generate Poster") or "auto_generate" not in st.session_state:
-    # ensure at least one run
-   # st.session_state["auto_generate"] = True
-
-
-
 fig = draw_poster(palette_mode, blob_shape, n_layers, wobble, points, 
                   sides, petals, radius_min, radius_max, alpha_min, alpha_max, 
                   int(seed), base_h, width=6, height=10)
