@@ -278,11 +278,6 @@ base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 
 
-
-
-show_palette(palette_csv)
-
-
 #if st.sidebar.button("Generate Poster") or "auto_generate" not in st.session_state:
     # ensure at least one run
    # st.session_state["auto_generate"] = True
