@@ -1,132 +1,163 @@
-import streamlit as st
-import numpy as np
-import matplotlib as plt
+# ===== setup and blob function =====
 import random, math
+import numpy as np
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
 from matplotlib.colors import hsv_to_rgb
+import streamlit as st
+import pandas as pd
+import os
 
-# === Helpers ===
-def luminance(rgb):
-    r, g, b = rgb
-    return 0.299*r + 0.587*g + 0.114*b
+# ------- Shape generator -------
+def shape(center=(0.5,0.5), r=0.1, points=500, wobble=0.15, kind="blob", sides=5, petals=6):
+    t = np.linspace(0, 2*np.pi, points)
 
-def blob(center=(0.5,0.5), r=0.3, points=200, wobble=0.15):
-    angles = np.linspace(0, 2*math.pi, points, endpoint=False)
-    radii = r * (1 + wobble*(np.random.rand(points)-0.5))
-    x = center[0] + radii * np.cos(angles)
-    y = center[1] + radii * np.sin(angles)
+    if kind == "blob":
+        radii = r * (1 + wobble*(np.random.rand(points)-0.5))
+        x = center[0] + radii * np.cos(t)
+        y = center[1] + radii * np.sin(t)
+
+    elif kind == "polygon":
+        angles = np.linspace(0, 2*np.pi, sides, endpoint=False)
+        x = center[0] + r * np.cos(angles)
+        y = center[1] + r * np.sin(angles)
+
+    elif kind == "heart":
+        x = center[0] + r * 16*np.sin(t)**3 / 16
+        y = center[1] + r * (13*np.cos(t) - 5*np.cos(2*t)
+                             - 2*np.cos(3*t) - np.cos(4*t)) / 16
+
+    elif kind == "star":
+        n = 5
+        angles = np.linspace(0, 2*np.pi, 2*n+1)
+        radii = np.array([r, r/2]*n + [r])
+        x = center[0] + radii * np.cos(angles)
+        y = center[0] + radii * np.sin(angles)
+
+    elif kind == "flower":
+        radii = r * (1 + 0.3 * np.sin(petals * t))
+        x = center[0] + radii * np.cos(t)
+        y = center[1] + radii * np.sin(t)
+
+    else:
+        radii = r * (1 + wobble*(np.random.rand(points)-0.5))
+        x = center[0] + radii * np.cos(t)
+        y = center[1] + radii * np.sin(t)
+
     return x, y
 
-def shape(center=(0.5,0.5), r=0.3, points=200, wobble=0.15, shape_type="blob"):
-    if shape_type=="circle":
-        angles=np.linspace(0,2*math.pi,points)
-        x=center[0]+r*np.cos(angles)
-        y=center[1]+r*np.sin(angles)
-        return x, y
-    elif shape_type=="polygon":
-        n_sides=random.randint(3,9)
-        angles=np.linspace(0,2*math.pi,n_sides,endpoint=False)
-        x=center[0]+r*np.cos(angles)
-        y=center[1]+r*np.sin(angles)
-        return np.append(x,x[0]), np.append(y,y[0])
-    else:
-        return blob(center,r,points,wobble)
+# ------- 3D shading -------
+def apply_shading(x, y, cx, cy, light_dir=(1,1)):
+    L = np.array(light_dir)/np.linalg.norm(light_dir)
+    pts = np.vstack([x-cx, y-cy]).T
+    norm = np.sqrt((pts**2).sum(axis=1))
+    pts_n = pts / norm[:,None]
+    shade = (pts_n @ L + 1)/2
+    return shade
 
-def rotate_coords(x, y, cx, cy, angle):
-    x_rot = (x-cx)*np.cos(angle) - (y-cy)*np.sin(angle) + cx
-    y_rot = (x-cx)*np.sin(angle) + (y-cy)*np.cos(angle) + cy
-    return x_rot, y_rot
+# ------- Palette CSV CRUD -------
+PALETTE_FILE = "palette.csv"
+if not os.path.exists(PALETTE_FILE):
+    df_init = pd.DataFrame([
+        {"name":"sky", "r":0.4, "g":0.7, "b":1.0},
+        {"name":"sun", "r":1.0, "g":0.8, "b":0.2},
+        {"name":"forest", "r":0.2, "g":0.6, "b":0.3}
+    ])
+    df_init.to_csv(PALETTE_FILE, index=False)
 
-# --- Palette generator ---
-def make_palette(k=6, mode="pastel", base_h=0.6):
-    cols=[]
+def read_palette():
+    return pd.read_csv(PALETTE_FILE)
+
+def load_csv_palette():
+    df = read_palette()
+    return [(row.r, row.g, row.b) for row in df.itertuples()]
+
+# ------- Palette Generator -------
+def make_palette(k=20, mode="pastel", base_h=0.60):
+    cols = []
+    if mode == "csv":
+        return load_csv_palette()
+
     for _ in range(k):
-        if mode=="pastel":
-            h=random.random(); s=random.uniform(0.15,0.35); v=random.uniform(0.9,1.0)
-        elif mode=="vivid":
-            h=random.random(); s=random.uniform(0.8,1.0); v=random.uniform(0.8,1.0)
-        elif mode=="mono":
-            h=base_h; s=random.uniform(0.2,0.6); v=random.uniform(0.5,1.0)
+        if mode == "pastel":
+            h = random.random(); s = random.uniform(0.15,0.35); v = random.uniform(0.9,1.0)
+        elif mode == "vivid":
+            h = random.random(); s = random.uniform(0.8,1.0); v = random.uniform(0.8,1.0)
+        elif mode == "mono":
+            h = base_h; s = random.uniform(0.1,0.6); v = random.uniform(0.5,1.0)
+        elif mode == "neon":
+            h = random.random(); s = random.uniform(0.85,1.0); v = random.uniform(0.92,1.0)
+        elif mode == "earth":
+            h = random.uniform(0.05,0.12); s = random.uniform(0.3,0.6); v = random.uniform(0.3,0.7)
+        elif mode == "ocean":
+            h = random.uniform(0.45,0.6); s = random.uniform(0.4,0.8); v = random.uniform(0.5,1.0)
+        elif mode == "sunset":
+            h = random.uniform(0.05,0.15); s = random.uniform(0.6,1.0); v = random.uniform(0.7,1.0)
+        elif mode == "analogous":
+            h = random.uniform(base_h-0.1, base_h+0.1); s = random.uniform(0.45,1.0); v = random.uniform(0.6,1.0)
+        elif mode == "triadic":
+            h = random.random(); s = random.uniform(0.5,1.0); v = random.uniform(0.6,1.0)
         else:
-            h=random.random(); s=random.uniform(0.3,1.0); v=random.uniform(0.5,1.0)
+            h = random.random(); s = random.uniform(0.3,1.0); v = random.uniform(0.5,1.0)
         cols.append(tuple(hsv_to_rgb([h,s,v])))
     return cols
 
-# --- Draw Poster ---
-def draw_poster(
-    palette_mode="pastel", shape_type="blob", n_layers=10, wobble=0.15,
-    background="#FFFFFF", title_color="#000000", seed=0,
-    shadow_offset=0.02, brightness_strength=0.3,
-    alpha_min=0.6, alpha_max=0.9,
-    light_angle=45, rotation_range=0.3):
-
+# ------- Poster Drawer -------
+def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
+                sides, radius_min, radius_max, alpha_min, alpha_max,
+                seed, base_h):
     random.seed(seed); np.random.seed(seed)
-    fig = plt.figure(figsize=(6,8), facecolor=background)
-    ax = plt.gca(); ax.axis('off'); ax.set_facecolor(background)
+    fig, ax = plt.subplots(figsize=(7,8))
+    ax.axis("off")
+    ax.set_facecolor((0.97,0.97,0.97))
 
-    palette = make_palette(6, mode=palette_mode)
-    dx = shadow_offset * math.cos(math.radians(light_angle))
-    dy = -shadow_offset * math.sin(math.radians(light_angle))
+    palette = make_palette(15, palette_mode, base_h)
 
-    for i in range(n_layers):
+    for _ in range(n_layers):
         cx, cy = random.random(), random.random()
-        rr = random.uniform(0.15,0.45)
-        angle = random.uniform(-rotation_range, rotation_range)
-        x, y = shape(center=(cx, cy), r=rr, wobble=wobble, shape_type=shape_type)
-        x, y = rotate_coords(x, y, cx, cy, angle)
+        rr = random.uniform(radius_min, radius_max)
+        x, y = shape((cx,cy), r=rr, wobble=wobble, points=points, kind=blob_shape, sides=sides)
 
-        # shadow
-        x_s, y_s = x + dx, y + dy
-        ax.fill(x_s, y_s, color=(0,0,0), alpha=0.45, edgecolor=(0,0,0,0))
-
-        # main shape
-        base_color = np.array(random.choice(palette))
-        brightness_factor = 0.7 + brightness_strength*(i/n_layers)
-        color = np.clip(base_color*brightness_factor,0,1)
+        color = random.choice(palette)
         alpha = random.uniform(alpha_min, alpha_max)
         ax.fill(x, y, color=color, alpha=alpha, edgecolor=(0,0,0,0))
 
-    # text contrast
-    bg_rgb = tuple(int(background.lstrip("#")[i:i+2],16)/255 for i in (0,2,4))
-    text_rgb = tuple(int(title_color.lstrip("#")[i:i+2],16)/255 for i in (0,2,4))
-    if abs(luminance(bg_rgb)-luminance(text_rgb))<0.5:
-        title_color="#FFFFFF" if luminance(bg_rgb)<0.5 else "#000000"
+        # drop shadow
+        xs = x + 0.01; ys = y - 0.01
+        ax.fill(xs, ys, color=(0,0,0), alpha=alpha*0.4)
 
-    ax.text(0.01,0.95,"Final Poster",fontsize=26,weight="bold",color=title_color,transform=ax.transAxes)
-    ax.text(0.01,0.91,"Week 8 • Arts & Big Data",fontsize=14,color=title_color,transform=ax.transAxes)
-    ax.text(0.01,0.88,f"Style: {palette_mode.title()} / Shape: {shape_type.title()}",fontsize=13,color=title_color,transform=ax.transAxes)
+        shade = apply_shading(x, y, cx, cy, (1,1))
+        base_color = np.array(color)
+        spec = shade**12
+        _ = [tuple(base_color*0.6 + s*0.4 + spec[j]*0.2) for j,s in enumerate(shade)]
 
-    return fig
+    st.pyplot(fig)
 
-# === Streamlit UI ===
-st.title("🎨 Generative Poster (Streamlit Ready)")
 
-st.sidebar.header("Controls")
-palette_mode = st.sidebar.selectbox("Palette Mode", ["pastel","vivid","mono","random"], index=0)
-shape_type = st.sidebar.selectbox("Shape Type", ['blob','circle','polygon'], index=0)
-n_layers = st.sidebar.slider("Layers", 3, 20, 10)
-wobble = st.sidebar.slider("Wobble", 0.01, 0.9, 0.05, 0.01)
-shadow_offset = st.sidebar.slider("Shadow Offset", 0.0, 0.1, 0.01, 0.005)
-brightness_strength = st.sidebar.slider("Brightness", 0.0, 0.9, 0.6, 0.05)
-alpha_min = st.sidebar.slider("Alpha Min", 0.1, 1.0, 0.25, 0.05)
-alpha_max = st.sidebar.slider("Alpha Max", 0.1, 1.0, 0.55, 0.05)
-light_angle = st.sidebar.slider("Light Angle", 0, 360, 50, 5)
-rotation_range = st.sidebar.slider("Rotation Range", 0.0, 1.0, 0.1, 0.05)
-background = st.sidebar.color_picker("Background Color", "#FFFFFF")
-title_color = st.sidebar.color_picker("Title Color", "#000000")
-seed = st.sidebar.number_input("Random Seed", 0, 9999, 0)
+# ================= STREAMLIT UI ======================
 
-if st.button("🎨 Generate Poster"):
-    fig = draw_poster(
-        palette_mode=palette_mode, shape_type=shape_type, n_layers=n_layers, wobble=wobble,
-        background=background, title_color=title_color, seed=seed,
-        shadow_offset=shadow_offset, brightness_strength=brightness_strength,
-        alpha_min=alpha_min, alpha_max=alpha_max,
-        light_angle=light_angle, rotation_range=rotation_range
-    )
-    st.pyplot(fig=fig)
+st.title("Generative 3D Abstract Poster (CSV + Shapes)")
 
-    # Save button
-    if st.button("💾 Save Poster"):
-        filename = f"poster_{seed}.png"
-        fig.savefig(filename, dpi=300, bbox_inches='tight')
-        st.success(f"Saved as {filename}")
+palette_mode = st.selectbox("Palette Mode",
+    ["pastel","vivid","mono","neon","ocean","sunset","analogous","triadic","csv","random"])
+
+blob_shape = st.selectbox("Shape",
+    ["blob","polygon","heart","star","flower"])
+
+n_layers = st.slider("Layers", 3, 20, 8)
+wobble = st.slider("Wobble", 0.01, 9.0, 0.15)
+points = st.slider("Points", 100, 1000, 200, 100)
+sides = st.slider("Polygon Sides", 3, 10, 5)
+
+radius_min = st.slider("Radius Min", 0.01, 0.2, 0.01)
+radius_max = st.slider("Radius Max", 0.05, 0.3, 0.25)
+alpha_min = st.slider("Alpha Min", 0.05, 0.5, 0.1)
+alpha_max = st.slider("Alpha Max", 0.5, 1.0, 0.9)
+seed = st.number_input("Seed", 0, 9999, 0)
+base_h = st.slider("Base Hue", 0.0, 1.0, 0.6)
+
+if st.button("Generate Poster"):
+    draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
+                sides, radius_min, radius_max, alpha_min, alpha_max,
+                seed, base_h)
