@@ -233,7 +233,7 @@ def draw_poster(palette_mode: str, blob_shape: str, n_layers: int, wobble: float
 # ---------------- Streamlit UI ----------------
 st.set_page_config(layout="centered", page_title="Generative Poster")
 
-st.title("Generative 3D Abstract Poster (CSV + Shapes)")
+st.title("CSV Driven Interactive 3D Poster")
 
 # palette upload / replace
 ensure_palette_file()
