@@ -124,7 +124,8 @@ def make_palette(k=15, mode="pastel", base_h=0.6, rng_seed=None):
     rng = random.Random(rng_seed)
     cols = []
     if mode == "csv":
-        return load_csv_palette()
+        palette_csv = load_csv_palette()
+        return palette_csv
 
     for i in range(k):
         if mode == "pastel":
@@ -278,7 +279,7 @@ base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
     # ensure at least one run
    # st.session_state["auto_generate"] = True
 
-chart = show_palette(palette)
+chart = show_palette(palette_csv)
 
 st.pyplot(chart)
 
