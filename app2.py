@@ -162,12 +162,13 @@ def make_palette(k=15, mode="pastel", base_h=0.6, rng_seed=None):
 # ---------------- palette visualize ------------
 
 def show_palette(palette):
-    plt.figure(figsize=(6,2))
+    fig, ax = plt.subplots(figsize=(6, 2))
     for i, c in enumerate(palette):
-        plt.fill_between([i, i+1], 0, 1, color=c)
-        plt.text(i+0.5, -0.1, f"{i+1}", ha="center", va="top")
-    plt.axis("off")
-    plt.show()
+        ax.fill_between([i, i + 1], 0, 1, color=c)
+        ax.text(i + 0.5, -0.1, f"{i+1}", ha="center", va="top")
+    ax.axis("off")
+    st.pyplot(fig)
+    
 # ---------------- Poster drawer ----------------
 def draw_poster(palette_mode: str, blob_shape: str, n_layers: int, wobble: float,
                 points: int, sides: int, petals: int,
