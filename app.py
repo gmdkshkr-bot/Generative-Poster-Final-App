@@ -134,9 +134,9 @@ def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
 
     ax.text(0.05, 0.95, "Final Poster • Interactiv • 3D • CSV",
             transform=ax.transAxes, fontsize=18, weight="bold")
-    ax.text(0.05, 0.91, "Week 9 • Art & Big Data",
+    ax.text(0.05, 0.92, "Week 9 • Art & Big Data",
             transform=ax.transAxes, fontsize=12)
-    ax.text(0.05, 0.88, f"{palette_mode} • {blob_shape} • {n_layers} layers • seed : {seed}",
+    ax.text(0.05, 0.90, f"{palette_mode} • {blob_shape} • {n_layers} layers • seed : {seed}",
             transform=ax.transAxes, fontsize=12)
                     
     return fig
