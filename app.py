@@ -139,23 +139,23 @@ def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
 
 st.title("Generative 3D Abstract Poster (CSV + Shapes)")
 
-palette_mode = st.selectbox("Palette Mode",
+palette_mode = st.sidebar.selectbox("Palette Mode",
     ["pastel","vivid","mono","neon","ocean","sunset","analogous","triadic","csv","random"])
 
-blob_shape = st.selectbox("Shape",
+blob_shape = st.sidebar.selectbox("Shape",
     ["blob","polygon","heart","star","flower"])
 
-n_layers = st.slider("Layers", 3, 20, 8)
-wobble = st.slider("Wobble", 0.01, 9.0, 0.15)
-points = st.slider("Points", 100, 1000, 200, 100)
-sides = st.slider("Polygon Sides", 3, 10, 5)
+n_layers = st.sidebar.slider("Layers", 3, 20, 8)
+wobble = st.sidebar.slider("Wobble", 0.01, 9.0, 0.15)
+points = st.sidebar.slider("Points", 100, 1000, 200, 100)
+sides = st.sidebar.slider("Polygon Sides", 3, 10, 5)
 
-radius_min = st.slider("Radius Min", 0.01, 0.2, 0.01)
-radius_max = st.slider("Radius Max", 0.05, 0.3, 0.25)
-alpha_min = st.slider("Alpha Min", 0.05, 0.5, 0.1)
-alpha_max = st.slider("Alpha Max", 0.5, 1.0, 0.9)
-seed = st.number_input("Seed", 0, 9999, 0)
-base_h = st.slider("Base Hue", 0.0, 1.0, 0.6)
+radius_min = st.sidebar.slider("Radius Min", 0.01, 0.2, 0.01)
+radius_max = st.sidebar.slider("Radius Max", 0.05, 0.3, 0.25)
+alpha_min = st.sidebar.slider("Alpha Min", 0.05, 0.5, 0.1)
+alpha_max = st.sidebar.slider("Alpha Max", 0.5, 1.0, 0.9)
+seed = st.sidebar.slider("Seed", 0, 9999, 0)
+base_h = st.sidebar.slider("Base Hue", 0.0, 1.0, 0.6)
 
 if st.button("Generate Poster"):
     draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
