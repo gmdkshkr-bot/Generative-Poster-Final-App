@@ -286,14 +286,10 @@ if PALETTE_FILE is None:
 df = pd.read_csv(PALETTE_FILE)
 
 # Find a hex-like column
-possible_cols = [c for c in df.columns if "color" in c.lower() or "hex" in c.lower()]
-if len(possible_cols) == 0:
-    st.error("No 'color' or 'hex' column found in this CSV.")
-    st.stop()
 
 palette = df[possible_cols[0]].dropna().tolist()
 
-st.write("### Current CSV Palette")
+
 show_palette(palette)
 
 
