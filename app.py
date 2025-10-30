@@ -132,7 +132,7 @@ def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
         spec = shade**12
         _ = [tuple(base_color*0.6 + s*0.4 + spec[j]*0.2) for j,s in enumerate(shade)]
 
-    st.pyplot(fig)
+    return fig
 
 
 # ================= STREAMLIT UI ======================
