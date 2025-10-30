@@ -132,6 +132,13 @@ def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
         spec = shade**12
         _ = [tuple(base_color*0.6 + s*0.4 + spec[j]*0.2) for j,s in enumerate(shade)]
 
+    ax.text(0.05, 0.95, "Final Poster • Interactiv • 3D • CSV",
+            transform=ax.transAxes, fontsize=12, weight="bold")
+    ax.text(0.05, 0.91, "Week 9 • Art & Big Data",
+            transform=ax.transAxes, fontsize=12)
+    ax.text(0.05, 0.88, f"{palette_mode} • {blob_shape} • {n_layers} layers • seed : {seed}",
+            transform=ax.transAxes, fontsize=12)
+                    
     return fig
 
 
