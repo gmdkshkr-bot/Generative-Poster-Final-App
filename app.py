@@ -108,7 +108,7 @@ def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
                 sides, radius_min, radius_max, alpha_min, alpha_max,
                 seed, base_h):
     random.seed(seed); np.random.seed(seed)
-    fig, ax = plt.subplots(figsize=(7,8))
+    fig, ax = plt.subplots(figsize=(7,10))
     ax.axis("off")
     ax.set_facecolor((0.97,0.97,0.97))
 
@@ -133,7 +133,7 @@ def draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
         _ = [tuple(base_color*0.6 + s*0.4 + spec[j]*0.2) for j,s in enumerate(shade)]
 
     ax.text(0.05, 0.95, "Final Poster • Interactiv • 3D • CSV",
-            transform=ax.transAxes, fontsize=12, weight="bold")
+            transform=ax.transAxes, fontsize=18, weight="bold")
     ax.text(0.05, 0.91, "Week 9 • Art & Big Data",
             transform=ax.transAxes, fontsize=12)
     ax.text(0.05, 0.88, f"{palette_mode} • {blob_shape} • {n_layers} layers • seed : {seed}",
