@@ -287,7 +287,7 @@ df = pd.read_csv(PALETTE_FILE)
 
 # Find a hex-like column
 
-palette = df[possible_cols[0]].dropna().tolist()
+palette = df
 
 
 show_palette(palette)
