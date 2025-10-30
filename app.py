@@ -166,6 +166,6 @@ base_h = st.sidebar.slider("Base Hue", 0.0, 1.0, 0.6)
 
 
 fig = draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
-                sides, radius_min, radius_max, alpha_min, alpha_max,
+                sides, petals, radius_min, radius_max, alpha_min, alpha_max,
                 seed, base_h)
 st.pyplot(fig)
