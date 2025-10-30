@@ -158,6 +158,15 @@ def make_palette(k=15, mode="pastel", base_h=0.6, rng_seed=None):
         cols.append(rgb)
     return cols
 
+# ---------------- palette visualize ------------
+
+def show_palette(palette):
+    plt.figure(figsize=(6,2))
+    for i, c in enumerate(palette):
+        plt.fill_between([i, i+1], 0, 1, color=c)
+        plt.text(i+0.5, -0.1, f"{i+1}", ha="center", va="top")
+    plt.axis("off")
+    plt.show()
 # ---------------- Poster drawer ----------------
 def draw_poster(palette_mode: str, blob_shape: str, n_layers: int, wobble: float,
                 points: int, sides: int, petals: int,
@@ -264,11 +273,11 @@ seed = st.sidebar.number_input("Seed (integer)", min_value=0, max_value=999999, 
 base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 # render
-'''
-if st.sidebar.button("Generate Poster") or "auto_generate" not in st.session_state:
+
+#if st.sidebar.button("Generate Poster") or "auto_generate" not in st.session_state:
     # ensure at least one run
-    st.session_state["auto_generate"] = True
-    '''
+   # st.session_state["auto_generate"] = True
+
 fig = draw_poster(palette_mode, blob_shape, n_layers, wobble, points, 
                   sides, petals, radius_min, radius_max, alpha_min, alpha_max, 
                   int(seed), base_h, width=6, height=10)
