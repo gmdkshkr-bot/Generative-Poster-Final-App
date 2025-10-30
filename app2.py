@@ -271,7 +271,7 @@ radius_min = st.sidebar.slider("Minimum Radius", 0.005, 0.2, 0.1, 0.001)
 radius_max = st.sidebar.slider("Maximum Radius", 0.02, 0.4, 0.22, 0.001)
 alpha_min = st.sidebar.slider("Alpha Min", 0.01, 0.6, 0.12, 0.01)
 alpha_max = st.sidebar.slider("Alpha Max", 0.2, 1.0, 0.9, 0.01)
-seed = st.sidebar.number_input("Seed (integer)", min_value=0, max_value=999999, value=0, step=1)
+seed = st.sidebar.number_input("Seed (integer)", min_value=0, max_value=999999, value=995, step=1)
 base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 # render
