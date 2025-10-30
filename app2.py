@@ -278,23 +278,23 @@ base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 palette = []
 
-if palette_mode == "csv":
-    if palette_file is None:
-        st.warning("Please upload a CSV palette to continue.")
-        st.stop()
 
-    df = pd.read_csv(palette_file)
+if palette_file is None:
+    st.warning("Please upload a CSV palette to continue.")
+    st.stop()
 
-    # Find a hex-like column
-    possible_cols = [c for c in df.columns if "color" in c.lower() or "hex" in c.lower()]
-    if len(possible_cols) == 0:
-        st.error("No 'color' or 'hex' column found in this CSV.")
-        st.stop()
+df = pd.read_csv(palette_file)
 
-    palette = df[possible_cols[0]].dropna().tolist()
+# Find a hex-like column
+possible_cols = [c for c in df.columns if "color" in c.lower() or "hex" in c.lower()]
+if len(possible_cols) == 0:
+    st.error("No 'color' or 'hex' column found in this CSV.")
+    st.stop()
 
-    st.write("### Current CSV Palette")
-    show_palette(palette)
+palette = df[possible_cols[0]].dropna().tolist()
+
+st.write("### Current CSV Palette")
+show_palette(palette)
 
 
 #if st.sidebar.button("Generate Poster") or "auto_generate" not in st.session_state:
