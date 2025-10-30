@@ -283,7 +283,7 @@ if PALETTE_FILE is None:
     st.warning("Please upload a CSV palette to continue.")
     st.stop()
 
-df = pd.read_csv(palette_file)
+df = pd.read_csv(PALETTE_FILE)
 
 # Find a hex-like column
 possible_cols = [c for c in df.columns if "color" in c.lower() or "hex" in c.lower()]
