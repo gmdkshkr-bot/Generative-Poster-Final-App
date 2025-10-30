@@ -70,8 +70,7 @@ def read_palette():
     return pd.read_csv(PALETTE_FILE)
 
 def load_csv_palette():
-    df = read_palette(seed)
-    random.seed(seed)
+    df = read_palette()
     return [(row.r, row.g, row.b) for row in df.itertuples()]
 
 # ------- Palette Generator -------
