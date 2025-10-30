@@ -157,7 +157,8 @@ alpha_max = st.sidebar.slider("Alpha Max", 0.5, 1.0, 0.9)
 seed = st.sidebar.slider("Seed", 0, 9999, 0)
 base_h = st.sidebar.slider("Base Hue", 0.0, 1.0, 0.6)
 
-if st.button("Generate Poster"):
-    draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
+
+fig = draw_poster(palette_mode, blob_shape, n_layers, wobble, points,
                 sides, radius_min, radius_max, alpha_min, alpha_max,
                 seed, base_h)
+st.pyplot(fig)
