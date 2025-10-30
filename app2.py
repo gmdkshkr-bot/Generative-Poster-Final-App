@@ -262,12 +262,12 @@ palette_mode = st.sidebar.selectbox("Palette Mode",
 blob_shape = st.sidebar.selectbox("Shape",
     ["blob","polygon","heart","star","flower"])
 
-n_layers = st.sidebar.slider("Layers", 3, 30, 8, 1)
+n_layers = st.sidebar.slider("Layers", 3, 30, 15, 1)
 wobble = st.sidebar.slider("Wobble", 0.01, 2.0, 0.15, 0.01)
-points = st.sidebar.slider("Points (smoothness)", 64, 2000, 300, 32)
-sides = st.sidebar.slider("Polygon / Star Sides", 3, 12, 5, 1)
+points = st.sidebar.slider("Points (smoothness)", 64, 2000, 200, 32)
+sides = st.sidebar.slider("Polygon / Star Sides", 3, 12, 6, 1)
 petals = st.sidebar.slider("Flower Petals", 2, 24, 7, 1)
-radius_min = st.sidebar.slider("Minimum Radius", 0.005, 0.2, 0.01, 0.001)
+radius_min = st.sidebar.slider("Minimum Radius", 0.005, 0.2, 0.05, 0.001)
 radius_max = st.sidebar.slider("Maximum Radius", 0.02, 0.4, 0.12, 0.001)
 alpha_min = st.sidebar.slider("Alpha Min", 0.01, 0.6, 0.12, 0.01)
 alpha_max = st.sidebar.slider("Alpha Max", 0.2, 1.0, 0.9, 0.01)
@@ -278,7 +278,7 @@ base_h = st.sidebar.slider("Base Hue (mono/analogous)", 0.0, 1.0, 0.6)
 
 fig = draw_poster(palette_mode, blob_shape, n_layers, wobble, points, 
                   sides, petals, radius_min, radius_max, alpha_min, alpha_max, 
-                  int(seed), base_h, width=6, height=10)
+                  int(seed), base_h, width=7, height=10)
 st.pyplot(fig)
 
 # download button
